@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+
+	<Properties>
+		<Property name="domain.name" value="${sys:fess.log.name:-fess}" />
+		<Property name="log.level" value="${sys:fess.log.level:-debug}" />
+		<Property name="root.log.level" value="${sys:fess.log.level:-info}" />
+		<Property name="log.pattern" value="%d [%t] %-5p %msg%n" />
+		<Property name="log.file.basedir" value="${sys:fess.log.path:-target/logs}" />
+		<Property name="backup.date.suffix" value="_%d{yyyyMMdd}" />
+		<Property name="backup.max.history" value="10" />
+		<Property name="backup.max.age" value="90" />
+		<Property name="backup.audit.max.age" value="360" />
+		<Property name="backup.searchlog.max.age" value="90" />
+		<Property name="audit.log.pattern" value="%msg%n" />
+		<Property name="searchlog.log.pattern" value="%msg%n" />
+	</Properties>
+
+	<Appenders>
+		<RollingFile name="AppFile" fileName="${log.file.basedir}/${domain.name}.log"
+			filePattern="${log.file.basedir}/${domain.name}${backup.date.suffix}-%i.log.gz">
+			<PatternLayout><Pattern>${log.pattern}</Pattern></PatternLayout><!-- <EcsLayout serviceName="fess" eventDataset="app" /> -->
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="100 MB" />
+			</Policies>
+			<DefaultRolloverStrategy fileIndex="max" min="1"
+				max="${backup.max.history}" compressionLevel="9">
+				<Delete basePath="${log.file.basedir}">
+					<IfFileName glob="${domain.name}*.log.gz" />
+					<IfLastModified age="P${backup.max.age}D" />
+				</Delete>
+			</DefaultRolloverStrategy>
+		</RollingFile>
+		<RollingFile name="AuditFile" fileName="${log.file.basedir}/audit.log"
+			filePattern="${log.file.basedir}/audit${backup.date.suffix}-%i.log.gz">
+			<PatternLayout>
+				<Pattern>${audit.log.pattern}</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="100 MB" />
+			</Policies>
+			<DefaultRolloverStrategy fileIndex="max" min="1"
+				max="${backup.max.history}" compressionLevel="9">
+				<Delete basePath="${log.file.basedir}">
+					<IfFileName glob="audit*.log.gz" />
+					<IfLastModified age="P${backup.audit.max.age}D" />
+				</Delete>
+			</DefaultRolloverStrategy>
+		</RollingFile>
+		<RollingFile name="SearchLogFile" fileName="${log.file.basedir}/searchlog.log"
+			filePattern="${log.file.basedir}/searchlog${backup.date.suffix}-%i.log.gz">
+			<PatternLayout>
+				<Pattern>${searchlog.log.pattern}</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="100 MB" />
+			</Policies>
+			<DefaultRolloverStrategy fileIndex="max" min="1"
+				max="${backup.max.history}" compressionLevel="9">
+				<Delete basePath="${log.file.basedir}">
+					<IfFileName glob="searchlog*.log.gz" />
+					<IfLastModified age="P${backup.searchlog.max.age}D" />
+				</Delete>
+			</DefaultRolloverStrategy>
+		</RollingFile>
+	</Appenders>
+
+	<Loggers>
+		<Logger name="org.codelibs" additivity="false" level="${log.level}">
+			<AppenderRef ref="AppFile" />
+		</Logger>
+		<Logger name="org.dbflute" additivity="false" level="${log.level}">
+			<AppenderRef ref="AppFile" />
+		</Logger>
+		<Logger name="org.lastaflute" additivity="false" level="${log.level}">
+			<AppenderRef ref="AppFile" />
+		</Logger>
+		<Logger name="org.opensearch.bootstrap" additivity="false" level="error">
+			<AppenderRef ref="AppFile" />
+		</Logger>
+		<Logger name="com.onelogin.saml2" level="off"/>
+		<Logger name="fess.log.audit" additivity="false" level="info">
+			<AppenderRef ref="AuditFile" />
+		</Logger>
+		<Logger name="fess.log.searchlog" additivity="false" level="info">
+			<AppenderRef ref="SearchLogFile" />
+		</Logger>
+		<Root level="${root.log.level}">
+			<AppenderRef ref="AppFile" />
+		</Root>
+	</Loggers>
+</Configuration>

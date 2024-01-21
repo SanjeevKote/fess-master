@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//DBFLUTE//DTD LastaDi 1.0//EN"
+	"http://dbflute.org/meta/lastadi10.dtd">
+<components>
+	<include path="convention.xml"/>
+	<include path="lastaflute.xml"/>
+	<include path="lasta_job.xml"/>
+
+	<include path="fess.xml"/>
+	<include path="fess_api.xml"/>
+	<include path="fess_cors.xml"/>
+	<include path="fess_dict.xml"/>
+	<include path="fess_job.xml"/>
+	<include path="fess_ldap.xml"/>
+	<include path="fess_query.xml"/>
+	<include path="fess_rankfusion.xml"/>
+	<include path="fess_score.xml"/>
+	<include path="fess_sso.xml"/>
+	<include path="fess_thumbnail.xml"/>
+
+	<include path="crawler/client.xml" />
+	<include path="crawler/mimetype.xml" />
+
+	<component name="accessTokenHelper" class="org.codelibs.fess.helper.AccessTokenHelper">
+	</component>
+	<component name="activityHelper" class="org.codelibs.fess.helper.ActivityHelper">
+	</component>
+	<component name="jobHelper" class="org.codelibs.fess.helper.JobHelper">
+	</component>
+	<component name="labelTypeHelper" class="org.codelibs.fess.helper.LabelTypeHelper">
+	</component>
+	<component name="keyMatchHelper" class="org.codelibs.fess.helper.KeyMatchHelper">
+	</component>
+	<component name="relatedContentHelper" class="org.codelibs.fess.helper.RelatedContentHelper">
+	</component>
+	<component name="relatedQueryHelper" class="org.codelibs.fess.helper.RelatedQueryHelper">
+	</component>
+	<component name="pluginHelper" class="org.codelibs.fess.helper.PluginHelper">
+	</component>
+	<component name="searchHelper" class="org.codelibs.fess.helper.SearchHelper">
+	</component>
+	<component name="themeHelper" class="org.codelibs.fess.helper.ThemeHelper">
+	</component>
+	<component name="queryStringBuilder" class="org.codelibs.fess.util.QueryStringBuilder" instance="prototype">
+	</component>
+	<component name="queryParser" class="org.codelibs.fess.query.parser.QueryParser">
+	</component>
+	<component name="facetInfo" class="org.codelibs.fess.entity.FacetInfo">
+	</component>
+	<component name="queryHelper" class="org.codelibs.fess.helper.QueryHelper">
+		<property name="defaultFacetInfo">facetInfo</property>
+		<postConstruct name="addQueryRescorer">
+			<arg>
+				<component class="org.codelibs.fess.score.LtrQueryRescorer" />
+			</arg>
+		</postConstruct>
+	</component>
+	<component name="viewHelper" class="org.codelibs.fess.helper.ViewHelper">
+	</component>
+	<component name="userAgentHelper" class="org.codelibs.fess.helper.UserAgentHelper">
+	</component>
+	<component name="popularWordHelper" class="org.codelibs.fess.helper.PopularWordHelper">
+	</component>
+	<component name="userInfoHelper" class="org.codelibs.fess.helper.UserInfoHelper">
+	</component>
+	<component name="authenticationManager" class="org.codelibs.fess.auth.AuthenticationManager">
+		<!--
+		<postConstruct name="addChain">
+			<arg>
+				<component class="org.codelibs.fess.auth.chain.CommandChain">
+					<property name="updateCommand">[
+					"/usr/sbin/htpasswd",
+					"-b",
+					"/tmp/test.txt",
+					"$USERNAME",
+					"$PASSWORD"
+					]</property>
+					<property name="deleteCommand">[
+					"/usr/sbin/htpasswd",
+					"-D",
+					"/tmp/test.txt",
+					"$USERNAME"
+					]</property>
+					<property name="targetUsers">[
+					"admin"
+					]</property>
+				</component>
+			</arg>
+		</postConstruct>
+		 -->
+		<postConstruct name="addChain">
+			<arg>
+				<component class="org.codelibs.fess.auth.chain.LdapChain">
+				</component>
+			</arg>
+		</postConstruct>
+	</component>
+	<component name="osddHelper" class="org.codelibs.fess.helper.OsddHelper">
+		<property name="osddPath">"/WEB-INF/orig/open-search/osdd.xml"</property>
+		<property name="encoding">"UTF-8"</property>
+	</component>
+	<component name="suggestHelper" class="org.codelibs.fess.helper.SuggestHelper">
+	</component>
+	<component name="gsaConfigParser" class="org.codelibs.fess.util.GsaConfigParser" instance="prototype">
+	</component>
+
+</components>

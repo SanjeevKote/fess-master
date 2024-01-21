@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//DBFLUTE//DTD LastaDi 1.0//EN"
+	"http://dbflute.org/meta/lastadi10.dtd">
+<components>
+	<include path="convention.xml" />
+	<include path="lastaflute_core.xml"/>
+	<include path="fess.xml" />
+
+	<include path="crawler_es.xml" />
+	<include path="fess_thumbnail.xml" />
+	<include path="fess_ingest.xml" />
+
+	<component name="labelTypeHelper" class="org.codelibs.fess.helper.LabelTypeHelper">
+	</component>
+	<component name="webFsIndexHelper" class="org.codelibs.fess.helper.WebFsIndexHelper">
+	</component>
+	<component name="dataIndexHelper" class="org.codelibs.fess.helper.DataIndexHelper">
+	</component>
+	<component name="duplicateHostHelper" class="org.codelibs.fess.helper.DuplicateHostHelper">
+	</component>
+	<component name="intervalControlHelper" class="org.codelibs.fess.helper.IntervalControlHelper">
+		<!--
+		<postConstruct name="addIntervalRule">
+			<arg>"5:00"</arg>
+			<arg>"10:00"</arg>
+			<arg>"2,3,4,5,6"</arg>
+			<arg>3600000</arg>
+		</postConstruct>
+		 -->
+	</component>
+	<component name="indexUpdater" class="org.codelibs.fess.indexer.IndexUpdater"
+		instance="prototype">
+		<!--
+		<property name="maxDocumentCacheSize">5</property>
+		<property name="unprocessedDocumentSize">100</property>
+		<property name="threadDump">false</property>
+		<postConstruct name="addBoostDocumentRule">
+			<arg>
+				<component class="org.codelibs.fess.indexer.BoostDocumentRule">
+					<property name="matchExpression">"url.matches(\".*fess.*\")"</property>
+					<property name="boostExpression">"1000.0"</property>
+				</component>
+			</arg>
+		</postConstruct>
+		 -->
+	</component>
+	<component name="crawlerStatsHelper"
+		class="org.codelibs.fess.helper.CrawlerStatsHelper">
+	</component>
+	<component name="fessCrawler" class="org.codelibs.fess.exec.Crawler"
+		instance="prototype">
+	</component>
+
+</components>

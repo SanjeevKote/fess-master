@@ -1,0 +1,91 @@
+#!/bin/bash
+
+cmd_type=$1
+url=$2
+output_file=$3
+image_size=100x100
+target_file=$(echo "$url" | sed -e "s#^file:/*#/#g")
+
+check_command() {
+  cmd=$1
+  cmd_path=$(command -v "${cmd}")
+  if [[ ! -e "${cmd_path}" ]] ; then
+    echo "${cmd} does not exist."
+    exit 1
+  fi
+}
+
+if [[ x"$HOME" = "x/root" ]] ; then
+  HOME=/var/lib/fess
+fi
+
+if [[ x"${cmd_type}" = "xmsoffice" ]] ; then
+  check_command convert
+  check_command pdftoppm
+  check_command unoconv
+  tmp_pdf_file=/tmp/thumbnail.$$.pdf
+  unoconv -e PageRange=1-1 -o ${tmp_pdf_file} -f pdf "${target_file}"
+  if [[ ! -f ${tmp_pdf_file} ]] ; then
+    echo "unoconv does not work."
+    exit 1
+  fi
+  tmp_png_prefix=/tmp/thumbnail.png.$$
+  pdftoppm -png -singlefile ${tmp_pdf_file} ${tmp_png_prefix}
+  tmp_png_file="${tmp_png_prefix}.png"
+  rm -f ${tmp_pdf_file}
+  if [[ ! -f ${tmp_png_file} ]] ; then
+    echo "pdftoppm does not work."
+    exit 1
+  fi
+  convert -thumbnail ${image_size} ${tmp_png_file} "${output_file}"
+  rm -f ${tmp_png_prefix}*png
+elif [[ x"${cmd_type}" = "xpdf" ]] ; then
+  check_command convert
+  check_command pdftoppm
+  target_file=$(echo "$url" | sed -e "s#^file:/*#/#g")
+  tmp_png_prefix=/tmp/thumbnail.png.$$
+  pdftoppm -png -singlefile "${target_file}" ${tmp_png_prefix}
+  tmp_png_file="${tmp_png_prefix}.png"
+  if [[ ! -f ${tmp_png_file} ]] ; then
+    echo "pdftoppm does not work."
+    exit 1
+  fi
+  convert -thumbnail ${image_size} ${tmp_png_file} "${output_file}"
+  rm -f ${tmp_png_prefix}*png
+elif [[ x"${cmd_type}" = "xps" ]] ; then
+  check_command convert
+  check_command pdftoppm
+  check_command ps2pdf
+  target_file=$(echo "$url" | sed -e "s#^file:/*#/#g")
+  tmp_pdf_file=/tmp/thumbnail.pdf.$$
+  ps2pdf "${target_file}" ${tmp_pdf_file}
+  if [[ ! -f ${tmp_pdf_file} ]] ; then
+    echo "ps2pdf does not work."
+    exit 1
+  fi
+  tmp_png_prefix=/tmp/thumbnail.png.$$
+  pdftoppm -png -singlefile ${tmp_pdf_file} ${tmp_png_prefix}
+  tmp_png_file="${tmp_png_prefix}.png"
+  rm -f ${tmp_pdf_file}
+  if [[ ! -f ${tmp_png_file} ]] ; then
+    echo "pdftoppm does not work."
+    exit 1
+  fi
+  convert -thumbnail ${image_size} ${tmp_png_file} "${output_file}"
+  rm -f ${tmp_png_prefix}*png
+elif [[ x"${cmd_type}" = "ximage" ]] ; then
+  check_command convert
+  target_file=$(echo "$url" | sed -e "s#^file:/*#/#g")
+  convert -thumbnail ${image_size} "${target_file}" "${output_file}"
+elif [[ x"${cmd_type}" = "x" ]] ; then
+  echo "No filetype."
+  exit 1
+else
+  echo "Unsupported type: ${cmd_type}"
+  exit 1
+fi
+
+if [[ ! -f ${output_file} ]] ; then
+  echo "Thumbnail is not created."
+  exit 1
+fi

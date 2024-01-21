@@ -1,0 +1,2 @@
+{"index":{"_index":"fess_user.user","_id":"YWRtaW4="}}
+{"password":"${fess.index.initial_password}","surname":"admin","roles":["YWRtaW4=","Z3Vlc3Q="],"name":"admin"}
