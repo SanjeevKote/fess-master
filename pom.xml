@@ -220,7 +220,7 @@
 						<ant antfile="${basedir}/dbflute.xml" target="download.dbflute" />
 						<ant antfile="${basedir}/module.xml" target="install.modules">
 							<property name="with.fess" value="true" />
-							<property name="opensearch.version" value="${opensearch.version}" />
+							<property name="opensearch.version" value="2.11.0" />
 						</ant>
 						<ant antfile="${basedir}/plugin.xml" target="install.plugins">
 							<property name="with.fess" value="true" />
@@ -1023,7 +1023,7 @@
 		<dependency>
 			<groupId>org.opensearch</groupId>
 			<artifactId>opensearch</artifactId>
-			<version>${opensearch.version}</version>
+			<version>2.11.0</version>
 			<exclusions>
 				<exclusion>
 					<groupId>jakarta.annotation</groupId>
@@ -1034,7 +1034,7 @@
 		<dependency>
 			<groupId>org.codelibs.opensearch</groupId>
 			<artifactId>opensearch-runner</artifactId>
-			<version>${opensearch.runner.version}</version>
+			<version>2.11.0.0</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.ow2.asm</groupId>
