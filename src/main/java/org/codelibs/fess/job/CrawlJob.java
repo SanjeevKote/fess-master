@@ -375,7 +375,7 @@ public class CrawlJob extends ExecJob {
             }
 
             //TODO Need to replace with FileSystem Path
-            PopulateDataHelper.populateFilesIntoDB("C:/Users/vn44295/Desktop/sampleTest");
+            PopulateDataHelper.populateFilesIntoDB("C:/sampleTest");
 
         } catch (final JobProcessingException e) {
             throw e;
